@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        /*
+            let sll = {
+                val: 1,
+                next:{
+                    val: 2,
+                    next:{
+                        val: 3,
+                        next: null
+                    }
+                }
+            }
+        */
+        //    if you want to get the very last value use "current" in your while loop
+        //  if you want the next to the last value use "current.next" in your while loop
+        class Node {
+            constructor(val) {
+                this.val = val;
+                this.next = null
+            }
+        }
+        class SLL {
+            constructor() {
+                this.head = null;
+                this.length = 0;
+            }
+            // print, printVals, pop, push, shift, unshift, get, set, insert, remove, reverse
+            print() {
+                return this;
+            }
+            printVals() {
+                let temp = [];
+                let current = this.head;
+                while (current) {
+                    temp.push(current.val);
+                    current = current.next;
+                }
+                return temp;
+                /*
+                    let i = 0;
+                    while(i < arr.length){
+                        temp.push(arr[i]);
+                        i++;
+                    }
+                */
+            }
+            // add to end of list
+            push(val) {
+                // creating a new node
+                let newNode = new Node(val);
+                // if this node is the first node. make it the head
+                if (!this.head) {
+                    this.head = newNode;
+                }
+                // if it is a subsequent node make it the .next of the previous node(s)
+                else {
+                    let current = this.head;
+                    while (current.next) {
+                        current = current.next;
+                    }
+                    current.next = newNode;
+                }
+                this.length++;
+                return this;
+            }
+            // remove from end of list
+            pop() {
+                if (!this.head) return undefined;
+                let current = this.head; //let sll = {val: 1,next: {val: 2,next: {val: 3,next: null}}}
+                let newEnd = current; //let sll = {val: 1,next: {val: 2,next: {val: 3,next: null}}}
+                while (current.next) {
+                    newEnd = current; //  {val: 1,next: {val: 2,next:{Node}}}
+                    current = current.next;
+                }
+                newEnd.next = null; // {val: 1,next: {val: 2,next:null}}
+                this.length--;
+                return this;
+            }
+            // remove from the front of list
+            shift() {
+                if (!this.head) return undefined;
+                let current = this.head; //let sll = {val: 1,next: {val: 2,next: {val: 3,next: null}}}
+                // reset head of list to be next value of current head.
+                this.head = current.next; //let sll = {val: 2,next: {val: 3,next: null}}
+                this.length--;
+                return current;
+            }
+            // adds to front of list
+            unshift(val) {
+                let newNode = new Node(val);
+                // if list is empty make new node head of list
+                if (!this.head) this.head = newNode;
+                else {
+                    // make sure to set new node next to current head
+                    // otherwise new node's .next will set itself recuresively
+                    newNode.next = this.head;
+                    this.head = newNode;
+                }
+                this.length++;
+                return this;
+            }
+            // find node by index
+            get(index) {
+                // find node at index
+                // check if index given is less than 0
+                //  check index given is greater than this.length
+                if (index < 0 || index >= this.length) return undefined;
+                let counter = 0;
+                let current = this.head;
+                // will stop before counter equal
+                while (counter !== index) {
+                    current = current.next;
+                    counter++;
+                }
+                return current;
+            }
+            // reset value of existing node
+            set(index, val) {
+                // use get method to find node at index
+                let foundNode = this.get(index);
+                // if there is a node found
+                if (foundNode) {
+                    foundNode.val = val;
+                    return true;
+                }
+                return false;
+            }
+            // insert new node at index
+            insert(index, val) {
+                let newNode = new Node(val);
+                if (index < 0 || index >= this.length) return undefined;
+                // handles end
+                if (index === this.length) return this.push(val);
+                // handles beginning 
+                if (index === 0) return this.unshift(val);
+                // handle middle of list
+                // {val: 1,next: {val: 2, next: {insert: 50, next:{val: 3,next: null}}}}
+                let prev = this.get(index - 1); // if we have index of 2 in line above we will stop at val: 2
+                // prev = {val: 2, next: {val: 3,next: null}}
+                let temp = prev.next; // stil ref lines above prev.next = next:{val: 3,next: null}
+                prev.next = newNode; // prev.next = {val: 2, next:{newNode}}
+                newNode.next = temp; // newNode.next = {val: 3,next: null}
+            }
+            // remove node at index
+            remove(index) {
+                if (index < 0 || index >= this.length) return undefined;
+                if (index === this.length - 1) return this.pop();
+                if (index === 0) return this.shift();
+                // {val: 1,next: {val: 2, next: {val: 50, next:{val: 3,next: null}}}}
+                let prev = this.get(index - 1); //{val: 1,next: {Node}}
+                let removed = prev.next; // {val: 2, next: {Node}}
+                prev.next = removed.next; // {val: 50, next:{val: 3,next: null}}
+                // prev = {val: 1, next:{val: 50, next:{val: 3,next: null}}}
+                this.length--;
+                return this;
+            }
+        }
+        const sll = new SLL();
+
+        sll.push(0);
+        sll.push("hello");
+        sll.push(2);
+        sll.push(3);
+        sll.push(4);
+        // sll.shift();
+        // console.log(sll.pop());
+        // console.log(sll.printVals());
+        // sll.unshift(5);
+        // sll.insert(2, 50);
+        // console.log(sll.get(2));
+        // console.log(sll.set(1, 17));
+        sll.remove(1);
+        console.log(sll.print());
+    </script>
+</body>
+
+</html>
